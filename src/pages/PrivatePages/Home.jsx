@@ -11,7 +11,7 @@ import { UnsubscribedCoursesGrid } from "../../components/HomeComponenets/Unsubs
 
 function Home({ homeData }) {
   const [showAllSubjects, setShowAllSubjects] = useState(false);
-
+   
   const displayedSubjects = showAllSubjects 
     ? homeData?.subscribed_courses?.[0]?.subjects || []
     : (homeData?.subscribed_courses?.[0]?.subjects || []).slice(0, 8);

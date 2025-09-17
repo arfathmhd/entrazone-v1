@@ -19,11 +19,6 @@ const PrivateRoute = ({ children, subscribedCourses = [] }) => {
     return <LoadingPage />;
   }
 
-  console.log(subscribedCourses,"check nowwwwwwwwwwwww");
-  
-
-
-  console.log(hasSelectedCourse,"this is coursessssssssssssssss");
   
 
   useEffect(() => {

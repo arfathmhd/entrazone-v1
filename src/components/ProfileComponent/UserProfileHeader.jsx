@@ -22,7 +22,6 @@ import { backendUrl } from "../../constant/BaseUrl";
 
 export default function UserProfileHeader() {
   const { user } = useSelector((state) => state.auth);
-  console.log(user,"this is details");
   
   
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -122,7 +121,6 @@ useEffect(() => {
         );
       }
 
-      console.log("Form data being sent:");
       console.log({
         name: formData.name,
         email: formData.email,

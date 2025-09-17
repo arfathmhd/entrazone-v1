@@ -1,36 +1,45 @@
 import { FiBookOpen } from "react-icons/fi";
 import { Button } from "../ui/button";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import { HiArrowTopRightOnSquare } from "react-icons/hi2";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { authApi } from "../../lib/api/auth";
+import Swal from 'sweetalert2'; // Import SweetAlert
 
 export function UnsubscribedCoursesGrid({ courses }) {
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   if (!courses || courses.length === 0) return null;
 
-  const handleExploreClick = (course, e) => {
+  const handleExploreClick = async (course, e) => {
     e.preventDefault();
     e.stopPropagation();
-    setSelectedCourse(course);
-    setIsModalOpen(true);
-  };
-
-  const handleCourseSelect = async (courseId) => {
     try {
-      const response = await authApi.selectedCourse({ course_id: courseId });
-      console.log(response,"check this response");
-      setIsModalOpen(false);
-      navigate("/");
+      const response = await authApi.selectedCourse({ course_id: course.course_id });
+      
+      // Show success message with SweetAlert
+      Swal.fire({
+        title: 'Success!',
+        text: `You've successfully selected ${course.course_name}`,
+        icon: 'success',
+        confirmButtonText: 'Continue'
+      }).then(() => {
+        // Refresh the page after user clicks the button
+        window.location.reload();
+      });
+      
     } catch (err) {
       console.error("Course selection failed:", err);
-      setError("Failed to select course. Please try again.");
+      
+      // Show error message with SweetAlert
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to select course. Please try again.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     }
   };
 
@@ -123,39 +132,6 @@ export function UnsubscribedCoursesGrid({ courses }) {
           </motion.div>
         ))}
       </motion.div>
-
-      {/* Course Details Modal */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>{selectedCourse?.course_name}</DialogTitle>
-          </DialogHeader>
-          
-          <div className="py-4">
-            <p className="text-sm text-gray-600 mb-4">
-              {selectedCourse?.description || 'No description available'}
-            </p>
-            
-            <h4 className="font-medium mb-2">Subjects in this course:</h4>
-            <ul className="list-disc list-inside space-y-1 mb-4">
-              {/* Replace with actual subjects data if available */}
-              <li>Introduction to {selectedCourse?.course_name}</li>
-              <li>Core Concepts</li>
-              <li>Advanced Topics</li>
-              <li>Practical Applications</li>
-            </ul>
-            
-            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-            
-            <Button 
-              onClick={() => handleCourseSelect(selectedCourse?.course_id)}
-              className="w-full"
-            >
-              Select This Course
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

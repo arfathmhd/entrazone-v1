@@ -99,7 +99,9 @@ function LessonPage() {
   const handlePdfClick = (lesson) => {
     if (lesson.pdf_notes && lesson.pdf_notes.length > 0) {
       const pdf = lesson.pdf_notes[0];
+
       if (pdf?.file) {
+        
         const baseUrl = backendUrl || "";
         const pdfUrl = `${baseUrl}${pdf.file}`;
         setSelectedPdf(pdfUrl);
